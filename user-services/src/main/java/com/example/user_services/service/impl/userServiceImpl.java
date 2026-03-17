@@ -1,8 +1,10 @@
-package com.example.user_services.service;
+package com.example.user_services.service.impl;
 
+import com.example.user_services.dto.LoginRequestDto;
 import com.example.user_services.dto.userDto;
 import com.example.user_services.modules.User;
 import com.example.user_services.repository.UserRepository;
+import com.example.user_services.service.userService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,7 @@ public class userServiceImpl implements userService {
 
     @Override
     public boolean saveUser(userDto userDto) {
+        userDto.setRole("user");
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepo.save(user);
@@ -63,4 +66,32 @@ public class userServiceImpl implements userService {
         userRepo.save(existing);
         return true;
     }
-}
+
+    @Override
+    public LoginRequestDto login(LoginRequestDto request) {
+        User user = userRepo.findByEmail(request.getEmail());
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        boolean isMatch = passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword()
+        );
+
+        if (!isMatch) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return new LoginRequestDto(
+                user.getId(),
+                user.getEmail(),
+                user.getRole(),
+                user.getPassword()
+        );
+    }
+
+    }
+
+
