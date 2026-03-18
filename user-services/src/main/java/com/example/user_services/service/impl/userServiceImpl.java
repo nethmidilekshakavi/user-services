@@ -43,7 +43,7 @@ public class userServiceImpl implements userService {
         if (existing == null) return false;
         existing.setName(dto.getName());
         existing.setEmail(dto.getEmail());
-        existing.setRole(dto.getRole());
+        existing.setRole("user");
         if (dto.getPassword() != null) {
             existing.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
