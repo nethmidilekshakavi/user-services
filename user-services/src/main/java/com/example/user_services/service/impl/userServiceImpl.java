@@ -92,6 +92,11 @@ public class userServiceImpl implements userService {
         );
     }
 
+    @Override
+    public User getUserById(Integer id) {
+        return userRepo.findById(Long.valueOf(id)).orElse(null);
+    }
+
     }
 
 

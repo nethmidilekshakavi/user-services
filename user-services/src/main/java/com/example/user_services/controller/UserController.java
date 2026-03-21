@@ -4,6 +4,8 @@ import com.example.user_services.dto.userDto;
 import com.example.user_services.modules.User;
 import com.example.user_services.service.userService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,5 +45,14 @@ public class UserController {
     @PatchMapping("/{id}/role")
     public boolean editRole(@PathVariable Integer id, @RequestParam String role) {
         return service.editRole(id, role);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        User user = service.getUserById(Math.toIntExact(id));
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.ok(user);
     }
 }

@@ -14,5 +14,6 @@ public interface userService {
     boolean deleteUser(Integer id);
     boolean editRole(Integer id, String role);
     LoginRequestDto login(LoginRequestDto request);
+    User getUserById(Integer id);
 
 }
